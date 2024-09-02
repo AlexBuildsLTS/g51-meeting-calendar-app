@@ -19,7 +19,7 @@ public class MeetingDaoImpl implements MeetingDao {
             statement.setString(1, meeting.getTitle());
             statement.setTimestamp(2, java.sql.Timestamp.valueOf(meeting.getStartTime()));
             statement.setTimestamp(3, java.sql.Timestamp.valueOf(meeting.getEndTime()));
-            statement.setInt(4, user.getId()); // Assuming User has an ID field
+            statement.setInt(4, user.getId()); //
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
