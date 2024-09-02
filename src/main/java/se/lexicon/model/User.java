@@ -46,4 +46,20 @@ public class User {
     }
 
     public String userInfo() {
-        return "Username: " + username + "
+        return "Username: " + username + ", Expired: " + expired;
+    }
+
+    private String generateRandomPassword() {
+        StringBuilder stringBuilder = new StringBuilder();
+        Random random = new SecureRandom();
+        String allowedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        int passwordLength = 10;
+
+        for (int i = 0; i < passwordLength; i++) {
+            int randomIndex = random.nextInt(allowedCharacters.length());
+            char randomChar = allowedCharacters.charAt(randomIndex);
+            stringBuilder.append(randomChar);
+        }
+        return stringBuilder.toString();
+    }
+}
