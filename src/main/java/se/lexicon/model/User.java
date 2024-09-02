@@ -8,18 +8,21 @@ public class User {
     private String password;
     private boolean expired;
 
-    //Register a new user
+    // Constructor for registration (password is generated)
     public User(String username) {
         this.username = username;
+        this.password = generateRandomPassword();
+        this.expired = false;
     }
 
-    //Authentication
+    // Constructor for authentication
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+        this.expired = false;
     }
 
-    //Fetch data from DB
+    // Constructor for fetching data from DB
     public User(String username, String password, boolean expired) {
         this.username = username;
         this.password = password;
@@ -38,26 +41,9 @@ public class User {
         return expired;
     }
 
+    public void setExpired(boolean expired) {
+        this.expired = expired;
+    }
+
     public String userInfo() {
-        return "Username: " + username + " Password" + password;
-    }
-
-    private String generateRandomPassword() {
-        String allowedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        int passwordLength = 10;
-        StringBuilder stringBuilder = new StringBuilder();
-        Random random = new SecureRandom();
-
-        for (int i = 0; i < passwordLength; i++) {
-            int randomIndex = random.nextInt(allowedCharacters.length());  //1
-            char randomChar = allowedCharacters.charAt(randomIndex);  //B
-            stringBuilder.append(randomChar);
-        }
-        return stringBuilder.toString();
-    }
-
-    public void newPassword() {
-        this.password = generateRandomPassword();
-    }
-
-}
+        return "Username: " + username + "
