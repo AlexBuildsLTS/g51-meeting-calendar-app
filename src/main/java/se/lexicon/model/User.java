@@ -4,26 +4,17 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 public class User {
-    private int id;  // Add this field
+    private int id;
     private final String username;
     private String password;
     private boolean expired;
 
-    // Constructor for registration (password is generated)
-    public User(String username) {
+    public User(String username, String password) {
         this.username = username;
-        this.password = generateRandomPassword();
+        this.password = password;
         this.expired = false;
     }
 
-    // Constructor for saving or updating a user in the database (without an ID)
-    public User(String username, String password, boolean expired) {
-        this.username = username;
-        this.password = password;
-        this.expired = expired;
-    }
-
-    // Constructor for creating a user object with an ID (for fetching from the database)
     public User(int id, String username, String password, boolean expired) {
         this.id = id;
         this.username = username;
@@ -31,13 +22,11 @@ public class User {
         this.expired = expired;
     }
 
-    // Getters and setters
-
-    public int getId() {  // Add this method
+    public int getId() {
         return id;
     }
 
-    public void setId(int id) {  // Add setter for id
+    public void setId(int id) {
         this.id = id;
     }
 
