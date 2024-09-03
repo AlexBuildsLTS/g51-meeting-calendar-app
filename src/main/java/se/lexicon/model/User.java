@@ -4,27 +4,26 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 public class User {
-    private int id;  // Add this field if you need an id for database purposes
+    private int id;  // Add this field
     private final String username;
     private String password;
     private boolean expired;
 
-    // Constructor for registration (password is generated, id is auto-generated)
-    public User(String username, String password) {
+    // Constructor for registration (password is generated)
+    public User(String username) {
         this.username = username;
-        this.password = password;
+        this.password = generateRandomPassword();
         this.expired = false;
     }
 
-    // Constructor for authentication
-    public User(int id, String username, String password) {
-        this.id = id;
+    // Constructor for saving or updating a user in the database (without an ID)
+    public User(String username, String password, boolean expired) {
         this.username = username;
         this.password = password;
-        this.expired = false;
+        this.expired = expired;
     }
 
-    // Constructor for fetching data from DB
+    // Constructor for creating a user object with an ID (for fetching from the database)
     public User(int id, String username, String password, boolean expired) {
         this.id = id;
         this.username = username;
@@ -32,42 +31,40 @@ public class User {
         this.expired = expired;
     }
 
-    // Getter for 'id'
-    public int getId() {
+    // Getters and setters
+
+    public int getId() {  // Add this method
         return id;
     }
 
-    // Setter for 'id'
-    public void setId(int id) {
+    public void setId(int id) {  // Add setter for id
         this.id = id;
     }
 
-    // Getter for 'username'
     public String getUsername() {
         return username;
     }
 
-    // Getter for 'password'
     public String getPassword() {
         return password;
     }
 
-    // Getter for 'expired'
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public boolean isExpired() {
         return expired;
     }
 
-    // Setter for 'expired'
     public void setExpired(boolean expired) {
         this.expired = expired;
     }
 
-    // Method to return user information
     public String userInfo() {
         return "Username: " + username + ", Expired: " + expired;
     }
 
-    // Method to generate a random password
     private String generateRandomPassword() {
         StringBuilder stringBuilder = new StringBuilder();
         Random random = new SecureRandom();
