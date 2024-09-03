@@ -19,9 +19,10 @@ public class UserDaoImpl implements UserDao {
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
+                int id = resultSet.getInt("id");
                 String password = resultSet.getString("password");
                 boolean expired = resultSet.getBoolean("expired");
-                return new User(username, password, expired);
+                return new User(id, username, password, expired);
             }
         } catch (SQLException e) {
             e.printStackTrace();
