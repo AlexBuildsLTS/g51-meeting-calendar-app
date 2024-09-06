@@ -1,7 +1,11 @@
 package se.lexicon.dao;
 
+import se.lexicon.exception.DBConnectionException;
+import se.lexicon.exception.UserNotFoundException;
 import se.lexicon.model.User;
 import se.lexicon.util.DatabaseConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,6 +16,8 @@ import java.util.List;
 
 public class UserDaoImpl implements UserDao {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserDaoImpl.class);
+
     @Override
     public User findByUsername(String username) {
         try (Connection connection = DatabaseConnection.getConnection()) {
@@ -21,15 +27,17 @@ public class UserDaoImpl implements UserDao {
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                int id = resultSet.getInt("id"); // Added this line
                 String password = resultSet.getString("password");
                 boolean expired = resultSet.getBoolean("expired");
-                return new User(id, username, password, expired); // Updated constructor
+                int id = resultSet.getInt("id");
+                return new User(id, username, password, expired);
+            } else {
+                throw new UserNotFoundException("User not found with username: " + username);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("SQL error occurred while finding user by username", e);
+            throw new DBConnectionException("Database error occurred while finding user by username", e);
         }
-        return null;
     }
 
     @Override
@@ -42,11 +50,36 @@ public class UserDaoImpl implements UserDao {
             statement.setBoolean(3, user.isExpired());
             statement.executeUpdate();
         } catch (SQLException e) {
-            if (e.getErrorCode() == 1062) { // 1062 is the error code for duplicate entry in MySQL
-                System.out.println("Username already exists. Please choose a different username.");
-            } else {
-                e.printStackTrace();
-            }
+            logger.error("Error saving user", e);
+            throw new DBConnectionException("Database error occurred while saving user", e);
+        }
+    }
+
+    @Override
+    public void update(User user) {
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            String query = "UPDATE users SET password = ?, expired = ? WHERE username = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, user.getPassword());
+            statement.setBoolean(2, user.isExpired());
+            statement.setString(3, user.getUsername());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("Error updating user", e);
+            throw new DBConnectionException("Database error occurred while updating user", e);
+        }
+    }
+
+    @Override
+    public void delete(User user) {
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            String query = "DELETE FROM users WHERE username = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, user.getUsername());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("Error deleting user", e);
+            throw new DBConnectionException("Database error occurred while deleting user", e);
         }
     }
 
@@ -63,38 +96,12 @@ public class UserDaoImpl implements UserDao {
                 String username = resultSet.getString("username");
                 String password = resultSet.getString("password");
                 boolean expired = resultSet.getBoolean("expired");
-
-                users.add(new User(id, username, password, expired)); // Updated constructor
+                users.add(new User(id, username, password, expired));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error retrieving all users", e);
+            throw new DBConnectionException("Database error occurred while retrieving all users", e);
         }
         return users;
-    }
-
-    @Override
-    public void update(User user) {
-        try (Connection connection = DatabaseConnection.getConnection()) {
-            String query = "UPDATE users SET password = ?, expired = ? WHERE id = ?"; // Updated to use id
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, user.getPassword());
-            statement.setBoolean(2, user.isExpired());
-            statement.setInt(3, user.getId()); // Updated to use id
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void delete(User user) {
-        try (Connection connection = DatabaseConnection.getConnection()) {
-            String query = "DELETE FROM users WHERE id = ?"; // Updated to use id
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, user.getId()); // Updated to use id
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 }

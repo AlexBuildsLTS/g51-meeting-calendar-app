@@ -7,7 +7,7 @@ public class Calendar {
     private int id;
     private String title;
     private User user;
-    private List<Meeting> meetings;
+    private final List<Meeting> meetings;
 
     public Calendar(String title, User user) {
         this.title = title;
@@ -44,10 +44,18 @@ public class Calendar {
     }
 
     public void addMeeting(Meeting meeting) {
-        meetings.add(meeting);
+        if (!meetings.contains(meeting)) {
+            meetings.add(meeting);
+        } else {
+            System.out.println("Meeting already exists.");
+        }
     }
 
     public void removeMeeting(Meeting meeting) {
-        meetings.remove(meeting);
+        if (meetings.contains(meeting)) {
+            meetings.remove(meeting);
+        } else {
+            System.out.println("Meeting does not exist.");
+        }
     }
 }

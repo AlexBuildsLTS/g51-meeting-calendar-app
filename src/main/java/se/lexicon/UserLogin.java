@@ -7,8 +7,8 @@ import se.lexicon.model.User;
 import java.util.Scanner;
 
 public class UserLogin {
-    private static UserDao userDao = new UserDaoImpl();
-    private static Scanner scanner = new Scanner(System.in);
+    private static final UserDao userDao = new UserDaoImpl();
+    private static final Scanner scanner = new Scanner(System.in);
 
     public static boolean login() {
         System.out.println("Enter your username: ");
@@ -19,12 +19,13 @@ public class UserLogin {
 
         User user = userDao.findByUsername(username);
 
-        if (user != null && user.getPassword().equals(password)) {
+        if (user != null && user.checkPassword(password)) {
             System.out.println("Login successful!");
             return true;
         } else {
-            System.out.println("Invalid username or password. Please try again.");
+            System.err.println("Invalid username or password.");
             return false;
         }
+
     }
 }

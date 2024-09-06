@@ -10,8 +10,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class CalendarDaoImpl implements CalendarDao {
+    private static final Logger logger = LoggerFactory.getLogger(CalendarDaoImpl.class);
 
     @Override
     public void addCalendar(Calendar calendar) {
@@ -22,7 +26,7 @@ public class CalendarDaoImpl implements CalendarDao {
             statement.setInt(2, calendar.getUser().getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error while adding calendar", e);
         }
     }
 
@@ -42,7 +46,7 @@ public class CalendarDaoImpl implements CalendarDao {
                 calendars.add(calendar);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error while finding calendars by user", e);
         }
         return calendars;
     }
@@ -63,7 +67,7 @@ public class CalendarDaoImpl implements CalendarDao {
                 return calendar;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error while finding calendar by id", e);
         }
         return null;
     }
@@ -77,7 +81,7 @@ public class CalendarDaoImpl implements CalendarDao {
             statement.setInt(2, calendar.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error while updating calendar", e);
         }
     }
 
@@ -89,7 +93,7 @@ public class CalendarDaoImpl implements CalendarDao {
             statement.setInt(1, calendar.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error while deleting calendar", e);
         }
     }
 }

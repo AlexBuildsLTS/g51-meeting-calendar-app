@@ -27,6 +27,15 @@ public class UserRegistration {
         userDao.save(user);
 
 
+
         System.out.println("Registration successful! Your password is: " + password);
+
+        User existingUser = userDao.findByUsername(username);
+        if (existingUser != null) {
+            System.out.println("Username already exists. Please choose a different one.");
+
+        }
+
+
     }
 }

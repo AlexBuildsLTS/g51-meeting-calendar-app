@@ -1,6 +1,7 @@
 package se.lexicon.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Meeting {
@@ -17,54 +18,37 @@ public class Meeting {
         this.description = description;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.participants = participants;
+        this.participants = participants != null ? participants : new ArrayList<>();
     }
 
-    public int getId() {
-        return id;
+
+    public void addParticipant(User user) {
+        if (!participants.contains(user)) {
+            participants.add(user);
+        }
     }
 
-    public void setId(int id) {
-        this.id = id;
+    // Remove participant
+    public void removeParticipant(User user) {
+        participants.remove(user);
     }
 
-    public String getTitle() {
-        return title;
-    }
+    // Getters and setters
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
 
-    public String getDescription() {
-        return description;
-    }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    public LocalDateTime getStartTime() { return startTime; }
+    public void setStartTime(LocalDateTime startTime) { this.startTime = startTime; }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
+    public LocalDateTime getEndTime() { return endTime; }
+    public void setEndTime(LocalDateTime endTime) { this.endTime = endTime; }
 
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
-    }
-
-    public List<User> getParticipants() {
-        return participants;
-    }
-
-    public void setParticipants(List<User> participants) {
-        this.participants = participants;
-    }
+    public List<User> getParticipants() { return participants; }
+    public void setParticipants(List<User> participants) { this.participants = participants; }
 }
